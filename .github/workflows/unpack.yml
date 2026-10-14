@@ -1,0 +1,30 @@
+name: Unpack KinoBot source
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repositoryni yuklash
+        uses: actions/checkout@v4
+
+      - name: ZIPni ochish
+        run: |
+          mkdir unpacked
+          unzip -o kinobot-source.zip -d unpacked
+          cp -R unpacked/. .
+          rm -rf unpacked kinobot-source.zip
+
+      - name: Fayllarni saqlash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Unpack KinoBot source" || echo "No changes"
+          git push
